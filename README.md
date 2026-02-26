@@ -15,17 +15,30 @@ KidzQueue is a parent-controlled, kid-safe YouTube playlist player.
   - Fullscreen disabled
   - Transparent touch guard over video to block taps/clicks
 
-## Run
-Start a local server:
+## Run (Auto-Reload)
+Install dependencies:
 
 ```bash
 cd "/Users/shalini/Documents/New project"
-python3 -m http.server 5500 --bind 127.0.0.1
+npm install
+```
+
+Start the local dev server (hot reload enabled):
+
+```bash
+npm run dev
 ```
 
 Then open:
 
 `http://127.0.0.1:5500`
+
+## Optional Static Fallback
+If you only need static serving without auto-reload:
+
+```bash
+python3 -m http.server 5500 --bind 127.0.0.1
+```
 
 ## Notes
 - This is a front-end MVP using browser `localStorage` for playlist and parent PIN.

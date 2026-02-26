@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>KidzQueue - Safe Video Player</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=20260226-1" />
   </head>
   <body>
     <main class="app-shell">
@@ -23,7 +23,8 @@
 
       <section id="parentGateView" class="card hidden">
         <h2>Parent Access</h2>
-        <p>Set or enter your 4-digit PIN.</p>
+        <p>Use your parent profile and 4-digit PIN.</p>
+        <input id="parentIdInput" type="text" placeholder="Parent name or email" />
         <input id="pinInput" type="password" maxlength="4" inputmode="numeric" placeholder="4-digit PIN" />
         <div class="actions">
           <button id="submitPinBtn" class="btn primary">Continue</button>
@@ -65,6 +66,7 @@
       <section id="childView" class="card hidden">
         <div class="section-head">
           <h2>Child Player</h2>
+          <button id="childBackBtn" class="btn ghost">Back</button>
         </div>
         <p id="childStatus" class="info"></p>
 
@@ -74,18 +76,19 @@
         </div>
         <div class="child-controls">
           <button id="childPlayBtn" class="btn accent">Start Playlist</button>
-          <button id="childNextBtn" class="btn primary hidden">Next Video</button>
+          <button id="childPauseBtn" class="btn ghost">Pause</button>
+          <button id="childNextBtn" class="btn primary">Next Video</button>
         </div>
 
         <div class="now-playing">
           <p><strong>Now:</strong> <span id="nowPlaying">-</span></p>
-          <p id="nextRow" class="hidden"><strong>Next:</strong> <span id="nextPlaying">-</span></p>
+          <p id="nextRow"><strong>Next:</strong> <span id="nextPlaying">-</span></p>
         </div>
       </section>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js" onerror="(function(){var s=document.createElement('script');s.src='https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js';document.head.appendChild(s);}())"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
-    <script src="app.js"></script>
+    <script src="app.js?v=20260226-1"></script>
   </body>
 </html>

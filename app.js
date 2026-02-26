@@ -1,5 +1,7 @@
 const STORAGE_KEY = "kidzqueue-playlist";
 const PIN_KEY = "kidzqueue-parent-pin";
+const PARENTS_KEY = "kidzqueue-parent-profiles";
+const LAST_PARENT_KEY = "kidzqueue-last-parent";
 
 const views = {
   home: document.getElementById("homeView"),
@@ -12,6 +14,7 @@ const ui = {
   openParentBtn: document.getElementById("openParentBtn"),
   openChildBtn: document.getElementById("openChildBtn"),
   submitPinBtn: document.getElementById("submitPinBtn"),
+  parentIdInput: document.getElementById("parentIdInput"),
   pinInput: document.getElementById("pinInput"),
   pinMsg: document.getElementById("pinMsg"),
   urlInput: document.getElementById("urlInput"),
@@ -20,7 +23,9 @@ const ui = {
   playlistList: document.getElementById("playlistList"),
   clearPlaylistBtn: document.getElementById("clearPlaylistBtn"),
   childStatus: document.getElementById("childStatus"),
+  childBackBtn: document.getElementById("childBackBtn"),
   childPlayBtn: document.getElementById("childPlayBtn"),
+  childPauseBtn: document.getElementById("childPauseBtn"),
   childNextBtn: document.getElementById("childNextBtn"),
   nowPlaying: document.getElementById("nowPlaying"),
   nextRow: document.getElementById("nextRow"),
@@ -34,7 +39,8 @@ let player;
 let currentIndex = 0;
 let ytApiReady = false;
 let lastImportedUrls = [];
-let pendingNextIndex = null;
+let isPaused = false;
+let consecutiveErrors = 0;
 
 function showView(key) {
   Object.values(views).forEach((v) => v.classList.add("hidden"));
@@ -49,8 +55,44 @@ function loadPlaylist() {
   }
 }
 
+function loadParentProfiles() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(PARENTS_KEY) || "{}");
+    if (parsed && typeof parsed === "object") return parsed;
+    return {};
+  } catch {
+    return {};
+  }
+}
+
+function saveParentProfiles(profiles) {
+  localStorage.setItem(PARENTS_KEY, JSON.stringify(profiles));
+}
+
+function getCookie(name) {
+  const row = document.cookie
+    .split("; ")
+    .find((item) => item.startsWith(`${name}=`));
+  return row ? decodeURIComponent(row.split("=")[1]) : "";
+}
+
+function rememberParentProfile(parentId) {
+  localStorage.setItem(LAST_PARENT_KEY, parentId);
+  document.cookie = `kidzqueue_parent=${encodeURIComponent(parentId)}; max-age=31536000; path=/; SameSite=Lax`;
+}
+
 function savePlaylist() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(playlist));
+}
+
+function migrateLegacyPinIfNeeded() {
+  const legacyPin = localStorage.getItem(PIN_KEY);
+  if (!legacyPin) return;
+  const profiles = loadParentProfiles();
+  if (!Object.keys(profiles).length) {
+    profiles.default = legacyPin;
+    saveParentProfiles(profiles);
+  }
 }
 
 function getVideoIdFromUrl(raw) {
@@ -202,10 +244,20 @@ function showPdfPreview(urls) {
     return;
   }
 
-  urls.forEach((url) => {
+  const pendingUrls = urls.filter((url) => {
+    const video = buildVideo(url);
+    if (!video) return false;
+    return !playlist.some((v) => v.id === video.id);
+  });
+
+  if (!pendingUrls.length) {
+    ui.pdfResults.innerHTML = "<p>No YouTube URLs found in this PDF.</p>";
+    return;
+  }
+
+  pendingUrls.forEach((url) => {
     const video = buildVideo(url);
     if (!video) return;
-    const exists = playlist.some((v) => v.id === video.id);
 
     const item = document.createElement("div");
     item.className = "preview-item";
@@ -219,8 +271,7 @@ function showPdfPreview(urls) {
 
     const addBtn = document.createElement("button");
     addBtn.className = "btn primary";
-    addBtn.textContent = exists ? "Added" : "Add";
-    addBtn.disabled = exists;
+    addBtn.textContent = "Add";
     addBtn.addEventListener("click", () => {
       const ok = addVideoFromInput(url);
       if (ok) showPdfPreview(lastImportedUrls);
@@ -277,25 +328,17 @@ function refreshNowNext() {
   if (!playlist.length) {
     ui.nowPlaying.textContent = "-";
     ui.nextPlaying.textContent = "-";
-    ui.nextRow.classList.add("hidden");
     return;
   }
 
   const current = playlist[currentIndex];
+  const next = playlist[(currentIndex + 1) % playlist.length];
   ui.nowPlaying.innerHTML = current
     ? `<a href="${current.url}" target="_blank" rel="noopener noreferrer">${current.title}</a>`
     : "-";
-  if (pendingNextIndex === null) {
-    ui.nextPlaying.textContent = "-";
-    ui.nextRow.classList.add("hidden");
-    return;
-  }
-
-  const next = playlist[pendingNextIndex];
   ui.nextPlaying.innerHTML = next
     ? `<a href="${next.url}" target="_blank" rel="noopener noreferrer">${next.title}</a>`
     : "-";
-  ui.nextRow.classList.remove("hidden");
 }
 
 function refreshChildState() {
@@ -303,51 +346,53 @@ function refreshChildState() {
     setMsg(ui.childStatus, "No videos available yet. Ask parent to add videos.");
     ui.childPlayBtn.classList.remove("hidden");
     ui.childPlayBtn.disabled = true;
-    ui.childNextBtn.classList.add("hidden");
+    ui.childPauseBtn.disabled = true;
+    ui.childPauseBtn.textContent = "Pause";
     ui.childNextBtn.disabled = true;
-    pendingNextIndex = null;
     refreshNowNext();
     return;
   }
   ui.childPlayBtn.disabled = false;
   ui.childPlayBtn.classList.remove("hidden");
-  ui.childNextBtn.classList.add("hidden");
-  ui.childNextBtn.disabled = true;
-  pendingNextIndex = null;
+  ui.childPauseBtn.disabled = false;
+  ui.childPauseBtn.textContent = "Pause";
+  ui.childNextBtn.disabled = false;
   setMsg(ui.childStatus, `${playlist.length} approved video(s). Tap Start Playlist to begin.`);
   refreshNowNext();
 }
 
 function playCurrentVideo() {
   if (!player || !playlist.length) return;
-  pendingNextIndex = null;
-  ui.childNextBtn.classList.add("hidden");
-  ui.childNextBtn.disabled = true;
+  isPaused = false;
+  consecutiveErrors = 0;
+  ui.childPauseBtn.textContent = "Pause";
   const id = playlist[currentIndex]?.id;
   player.loadVideoById(id);
   player.playVideo();
   ui.childPlayBtn.classList.add("hidden");
-  refreshNowNext();
-}
-
-function armNextVideo(reason = "ended") {
-  if (!playlist.length) return;
-  pendingNextIndex = (currentIndex + 1) % playlist.length;
+  ui.childPauseBtn.disabled = false;
   ui.childNextBtn.disabled = false;
-  ui.childNextBtn.classList.remove("hidden");
-  if (reason === "error") {
-    setMsg(ui.childStatus, "This video is unavailable. Tap Next Video.");
-  } else {
-    setMsg(ui.childStatus, "Video finished. Tap Next Video.");
-  }
   refreshNowNext();
 }
 
-function playPendingNextVideo() {
-  if (pendingNextIndex === null) return;
-  currentIndex = pendingNextIndex;
+function goToNextVideo() {
+  if (!playlist.length) return;
+  currentIndex = (currentIndex + 1) % playlist.length;
   playCurrentVideo();
   setMsg(ui.childStatus, "Playing approved video.");
+}
+
+function togglePause() {
+  if (!player || !playlist.length) return;
+  if (isPaused) {
+    player.playVideo();
+    isPaused = false;
+    ui.childPauseBtn.textContent = "Pause";
+  } else {
+    player.pauseVideo();
+    isPaused = true;
+    ui.childPauseBtn.textContent = "Resume";
+  }
 }
 
 function initPlayerIfReady() {
@@ -375,15 +420,23 @@ function initPlayerIfReady() {
         if (playlist.length) playCurrentVideo();
       },
       onStateChange: (event) => {
-        if (event.data === YT.PlayerState.ENDED && playlist.length) {
-          armNextVideo("ended");
+        if (event.data === YT.PlayerState.PLAYING) {
+          consecutiveErrors = 0;
         }
-        if (event.data === YT.PlayerState.PAUSED) {
-          player.playVideo();
+        if (event.data === YT.PlayerState.ENDED && playlist.length) {
+          setMsg(ui.childStatus, "Video finished. Tap Next Video.");
+          ui.childPauseBtn.textContent = "Pause";
+          isPaused = false;
         }
       },
       onError: () => {
-        armNextVideo("error");
+        consecutiveErrors += 1;
+        if (playlist.length > 1 && consecutiveErrors < playlist.length) {
+          setMsg(ui.childStatus, "Video unavailable. Loading next approved video...");
+          goToNextVideo();
+          return;
+        }
+        setMsg(ui.childStatus, "This video is unavailable. Tap Next Video.");
       },
     },
   });
@@ -402,15 +455,23 @@ function openChildMode() {
 }
 
 function submitParentPin() {
+  const parentId = ui.parentIdInput.value.trim().toLowerCase();
   const pin = ui.pinInput.value.trim();
+  if (!parentId) {
+    setMsg(ui.pinMsg, "Enter parent name or email.");
+    return;
+  }
   if (!/^\d{4}$/.test(pin)) {
     setMsg(ui.pinMsg, "PIN must be 4 digits.");
     return;
   }
 
-  const existing = localStorage.getItem(PIN_KEY);
+  const profiles = loadParentProfiles();
+  const existing = profiles[parentId];
   if (!existing) {
-    localStorage.setItem(PIN_KEY, pin);
+    profiles[parentId] = pin;
+    saveParentProfiles(profiles);
+    rememberParentProfile(parentId);
     setMsg(ui.pinMsg, "PIN set. Parent unlocked.");
     showView("parent");
     renderPlaylist();
@@ -422,12 +483,16 @@ function submitParentPin() {
     return;
   }
 
+  rememberParentProfile(parentId);
   setMsg(ui.pinMsg, "Parent unlocked.");
   showView("parent");
   renderPlaylist();
 }
 
 ui.openParentBtn.addEventListener("click", () => {
+  const rememberedParent =
+    localStorage.getItem(LAST_PARENT_KEY) || getCookie("kidzqueue_parent") || "";
+  ui.parentIdInput.value = rememberedParent;
   ui.pinInput.value = "";
   setMsg(ui.pinMsg, "");
   showView("parentGate");
@@ -439,12 +504,21 @@ ui.openChildBtn.addEventListener("click", () => {
 ui.childPlayBtn.addEventListener("click", () => {
   playCurrentVideo();
 });
+ui.childPauseBtn.addEventListener("click", () => {
+  togglePause();
+});
 ui.childNextBtn.addEventListener("click", () => {
-  playPendingNextVideo();
+  goToNextVideo();
+});
+ui.childBackBtn.addEventListener("click", () => {
+  showView("home");
 });
 
 ui.submitPinBtn.addEventListener("click", submitParentPin);
 ui.pinInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") submitParentPin();
+});
+ui.parentIdInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") submitParentPin();
 });
 
@@ -470,6 +544,7 @@ document.querySelectorAll("[data-back-home]").forEach((btn) => {
   btn.addEventListener("click", () => showView("home"));
 });
 
+migrateLegacyPinIfNeeded();
 renderPlaylist();
 refreshChildState();
 showView("home");
