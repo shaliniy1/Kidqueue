@@ -1,0 +1,274 @@
+Find Ideas
+Build Ideas
+Pricing
+More
+Login
+Sign Up
+Find Your Next Startup Idea
+
+Browse validated opportunities with research, market analysis, execution plans, and more
+
+New
+For YouBETA
+Interested
+Saved
+Building
+Not Interested
+Greg's Pick
+AI Suggest
+All Filters
+1365 ideas
+Sort by:
+Newest First
+Idea of the Day
+Home safety audits that help seniors age in place
+Idea of the Day Mar 20, 2026
+
+The loose rug was there for years. So was the dim hallway, the missing grab bar, the step without a railing. Three in four seniors want to age at home. One in four will fall this year, and a fall hospitalization costs an average of $35,000. The hazards are fixable. They're invisible to the family until someone ends up on the floor. StayHome sends an assessor before the fall happens. They photograph the hazards hiding in plain sight: the bathroom without grab bars, the extension cord running under the carpet, the hallway light that burned out months ago. Each hazard gets a risk score, a fix, and a cost estimate. StayHome connects the family with vetted contractors who handle the work. One visit turns years of invisible risk into a weekend of fixes. Start with a checklist and a camera. The assessment doesn't require technology. It requires knowing what to look for. Partner with occupational therapists or aging-in-place specialists who understand fall risk patterns. Use AI to turn photos and notes into professional reports with risk ratings, specific fixes, and cost estimates. Build a small contractor network willing to pay 15-20% referral fees. First customers come through local senior centers and home care agencies who field calls from worried families. The metric that matters: do families hire the contractors? Charge $199 to $299 per audit upfront. Earn $500 to $1,000 in referral fees when contractors complete the work. Add $25 a month for ongoing monitoring with quarterly check-ins. That's the consumer wedge. The B2B path is where it scales. A discharge planner at a hospital needs somewhere to send a patient going home after a hip replacement. An insurance adjuster would rather fund a $299 audit than process a claim ten times that size. An elder law attorney wants something concrete to recommend when families ask how to keep a parent safe. Three professions field the same question every week and have nothing to hand the family. That's the distribution.
+
+View Full Report
+Build This Idea
+Idea Actions
+Interested
+Not Interested
+Save
+Building
+Nightclub CRM that turns guest lists into profit
+Released Mar 20, 2026
+
+Nightlife promotion is a real business running on informal tools. Guest lists tracked in Notes app screenshots. Marketing spend remembered approximately. Revenue calculated after the fact from bank statements and rough estimates. The promoter who knows exactly which venue, which DJ, and which marketing channel made last Saturday profitable has an edge that almost nobody in the industry has. Nightcount pulls data from ticketing platforms, payment processors, and door check-ins to calculate profit per event in real time. Guest lists become revenue records. Marketing spend gets matched against attendance and ticket sales. The promoter sees which venues convert, which DJs drive VIP bookings, and which Instagram posts moved the door. Cross-promoter benchmarks build quietly in the background, giving Nightcount users a read on how their events stack up against comparable nights in the same market. Connect Stripe or Square for payments and Eventbrite for ticketing first. Build a dashboard that ingests guest list CSVs and calculates basic event ROI: ticket revenue minus venue costs, staff, and marketing spend. Add a mobile check-in flow so door staff can mark arrivals in real time. Ship it to three solo promoters running weekly events and let them break it. The metric that matters is whether promoters open the dashboard the morning after an event. If they do, the product is working. Nightcount starts at $49 a month for promoters running up to five events and scales to $250 for teams running thirty or more. One event where the data reveals a leaking marketing channel pays for months of the subscription. Venue management companies are the natural next buyer. They run multiple nights across multiple spaces with no consolidated view of what performs. A single venue group contract covers more revenue than dozens of individual promoter subscriptions. The promoter base builds the benchmark data. The venue chains pay to access it.
+
+View Full Report
+Build This Idea
+Idea Actions
+Interested
+Not Interested
+Save
+Building
+AI style app that teaches fashion basics through daily challenges
+Released Mar 20, 2026
+
+Getting dressed takes longer than it should for people who don't know why their outfits work or don't. The clothes are there. The combinations aren't obvious. A stylist would fix this in one session and charge $200 for it. The internet would fix it with seventeen contradictory Reddit threads and a Pinterest board that doesn't reflect anything the person owns. Fitly analyzes a wardrobe from photos and turns style improvement into a daily practice. Upload clothes, get outfit combinations scored by fit, color, and proportion. Daily challenges push toward combinations the user wouldn't have tried alone. Points unlock new styling tips as milestones hit. The wardrobe data builds over time into a personal style profile that gets more useful the longer it's used, because every outfit logged teaches Fitly what works for that specific person's clothes, body, and comfort level. Build a mobile app with AI Vision for wardrobe photo analysis. The first version needs two things: a photo upload flow that categorizes clothes by type and color, and a daily challenge system that generates outfit combinations from what's already in the wardrobe. Skip the points system in the first build - validate that the outfit scoring is accurate enough to trust before layering gamification on top. Start with 20 to 30 fashion Reddit users and track one metric: do they open the app three days in a row. If the daily challenge pulls them back, the habit loop works. If it doesn't, the prompts need rethinking before anything else gets built. Fitly runs free with a trial, then $9.99 a month or $49.99 a year for personalized styling sessions and exclusive challenges. An annual subscriber who builds six months of wardrobe history has outfit data, style progress, and a personal profile that doesn't exist anywhere else. That accumulated record is what makes leaving feel like starting over. Style communities on Reddit are where the first users come from. People already asking for help and getting advice that doesn't account for the specific clothes sitting in their closet.
+
+View Full Report
+Build This Idea
+Idea Actions
+Interested
+Not Interested
+Save
+Building
+Your Startup Toolkit
+
+Tools to research, validate, and build your next startup idea
+
+Idea Generator
+
+Get AI-generated ideas tailored to your background and goals
+
+AI Research Agent
+
+Comprehensive market analysis and validation in minutes
+
+Idea Builder
+
+AI prompts for landing pages, code, and creative assets
+
+AI Chat
+
+Chat with any idea to access all its research data instantly
+
+Tax literacy app for freelancers who file their own returns
+Released Mar 20, 2026
+
+Tax software has one job: get the return filed. It does that well. What it doesn't do is explain why a freelancer owes what they owe, which purchases cut the bill, or what to do differently before next April. Filing is a one-week problem. Understanding is a year-round one. Freelancers are paying for that gap every time they file. Taxwize is a year-round tax education platform built for independent workers. Short lessons explain how deductions work in plain language, using examples from freelance design, consulting, and content work. An expense tracker flags purchases that qualify for write-offs as they happen, not in a panic during filing season. When a quarterly deadline approaches, the platform sends a reminder with the math already done. The goal isn't a faster return. It's a smaller bill. Start with twenty lessons covering the deductions freelancers miss most: home office, equipment, health insurance, retirement contributions. Build a simple expense tracker that tags purchases by deduction category. Test with fifty freelancers from r/freelance and measure one thing: does their estimated tax bill drop after three months on the platform? If it does, the product works. If it doesn't, no amount of gamification fixes it. Add CPA chat access once the core education layer proves its value. Taxwize charges $19 a month for self-serve access and $49 for CPA chat and custom scenarios. Accounting firms serving freelance-heavy client bases are the distribution channel. One firm with 200 freelance clients generates more signups than a year of content marketing. The behavioral data on which deductions freelancers miss most by industry is what makes Taxwize hard to copy. A consultant's miss list looks nothing like a photographer's. That intelligence compounds with every user who files differently than they did the year before.
+
+View Full Report
+Build This Idea
+Idea Actions
+Interested
+Not Interested
+Save
+Building
+AI sparring partner for B2B sales teams
+Idea of the Day Mar 19, 2026
+
+Pilots train in simulators before they fly. Surgeons practice on cadavers before they cut. Sales reps practice on prospects. The first time a rep hears "we don't have the budget for this" and has to respond in real time, money is on the line. No other high-stakes profession treats live performance as the training environment. Prepitch is an AI roleplay tool that lets sales reps practice against simulated buyers before real money is on the table. Feed it call transcripts and it builds buyers that push back the way real prospects do: the procurement lead who stalls on budget, the gatekeeper who won't connect to the decision maker, the champion who goes quiet after the demo. Each session scores where reps fold, where they recover, and where the deal would have died. A rep who practices the same objection twelve times stops losing deals to it. Start with one vertical and the five objections that kill deals before the demo. Train the simulation on real call transcripts so the pushback sounds like someone the rep would face in pipeline. The hard part is calibrating discomfort. A practice session that feels easy doesn't change behavior. Make it hard enough that reps dread it and useful enough that they come back. Get that balance right before adding verticals or scenarios. Prepitch runs $49 per user per month. A team that cuts 30 days off new rep ramp time recovers the annual seat cost in the first closed deal. Enterprise packages built from a company's own lost deal data sit inside sales enablement budgets. Growth is vertical by vertical: close one SaaS sales team, learn their objection patterns, and the next SaaS team gets a simulation that already knows the five ways their deals die. A sales manager buys Prepitch to fix close rates. The reps keep using it because failing in private is less expensive than failing on a quota.
+
+View Full Report
+Build This Idea
+Idea Actions
+Interested
+Not Interested
+Save
+Building
+DIY learning app that turns repair rookies into confident fixers
+Released Mar 19, 2026
+
+A toilet won't stop running. A cabinet handle dangles loose. The drain backed up again. Calling a handyman costs $150 minimum and requires taking time off work. YouTube has 47-minute tutorials that assume the viewer already knows what a ball valve is. The comments section is full of people arguing about teflon tape versus pipe dope. The information exists. The beginner-friendly version of it doesn't. Patchwork breaks home repair into 3-minute lessons filmed for absolute beginners. Each video covers one fix: what to buy, where to find it, how to complete the repair with close-up shots and plain language. No assumed knowledge. No 10-minute preambles. Completed fixes unlock the next skill level. The app tracks every repair attempted and every lesson abandoned, building a picture of which fixes beginners tackle first and which ones send them back to calling a handyman. Data that sharpens the curriculum around the moments that matter. Build 20 core lessons covering the most common household emergencies: clogged drains, running toilets, squeaky doors, loose fixtures, stuck windows. Film each one with a contractor demonstrating and a beginner asking the questions a first-timer would ask. A simple progress tracker and checklist system ships in the first version. Test with 50 beta users from r/HomeImprovement and track which lessons get completed versus abandoned halfway through. Abandoned lessons are the product roadmap. Patchwork runs $10 a month for the starter pack and $20 to $30 for full mastery access with live Q&A sessions. Repair-specific searches like "how to fix a running toilet" and "water heater repair" have enormous search volume and almost no competition from structured learning products. A beginner who fixes one thing without calling a handyman has already saved ten times the monthly subscription cost. That first win is what brings them back for the next repair and the one after that.
+
+View Full Report
+Build This Idea
+Idea Actions
+Interested
+Not Interested
+Save
+Building
+Success Stories
+
+Real founders building with Ideabrowser
+
+View All
+
+Josh Pigford
+
+Founder, Baremetrics
+
+$15K Acquisition in 7 Days
+
+Beau Johnson
+
+Product Builder
+
+$489 Revenue in 24 Hours
+
+Yazin Saï
+
+Serial Entrepreneur
+
+0 to MVP in 24 Hours
+
+Bryan W
+
+Developer & Entrepreneur
+
+Database to Active Build
+
+Dhruval Golakiya
+
+Developer
+
+Idea to MVP in 8 Hours
+
+Marius Price
+
+Founder, SoberShift
+
+Community-Driven Launch
+
+Vendor and permit tracking app for city event organizers
+Released Mar 19, 2026
+
+Street fair organizers are running logistics as complex as a small construction project. Fifty vendors. Three city departments. Booth assignments, load-in windows, permit deadlines, payment follow-ups. All of it lands on one person. Hotels have software for this. Restaurants have software for this. City event organizers have email. Vendorly is a single dashboard for every moving part. Vendors apply, get assigned booths, and receive automated deadline reminders without the organizer chasing anyone. Permits get tracked across city departments in one view instead of three inboxes. Setup windows, payment status, and outstanding approvals all visible at once. When something is about to fall through, the organizer knows before it does. For the first time, the person running the event can stand in the middle of it. Start with vendor registration forms feeding into a simple dashboard with booth assignment logic and automated payment reminders. Onboard one farmers market coordinator and map their workflow from vendor application to load-in. Workarounds built in email become features. Gaps between city departments become integration points. Ship it lean, then watch where it breaks. The metric is whether the organizer sends fewer frantic messages the week before the event. Once that number drops, build the permit tracking layer on top. Vendorly charges $199 for a first event and $199 to $500 a month for recurring markets. A weekly farmers market coordinator is a contract that renews each season without a sales call. At ten recurring markets, the revenue is predictable enough to hire. The compounding asset is institutional knowledge: vendor histories, city contacts, permit timelines, approval patterns. A new organizer who signs up inherits years of accumulated context that took the previous organizer a decade to build. Event software tracks what happened. Vendorly tells the next organizer what to expect and what to avoid.
+
+View Full Report
+Build This Idea
+Idea Actions
+Interested
+Not Interested
+Save
+Building
+Confidence coaching app for young professionals
+Released Mar 19, 2026
+
+Walking into a networking event feels like stepping onto a stage without a script. Junior professionals watch coworkers command rooms and wonder what they're missing. Social skills decide who gets promoted, who builds the network, and who gets stuck. Executive coaches charge $200 an hour. Self-help books gather dust. The gap between knowing confidence matters and having a structured way to build it stays wide open. Groundset delivers 5 to 10 minute daily lessons that teach real professional scenarios: nailing introductions, speaking up in meetings, handling conflict, building rapport. Each lesson includes AI-powered practice scenarios with immediate feedback. Skill trees track progress across five categories so the gap between where someone starts and where they are six weeks in becomes visible. Every lesson completed and every scenario replayed across the platform reveals which skills professionals struggle with most by industry and career stage, sharpening the curriculum around where people actually get stuck. Build 50 core lessons across five categories: first impressions, small talk, workplace presence, handling conflict, and building rapport. Record simple demonstration videos with a confidence coach for each skill. AI generates practice scenarios that adapt based on user responses. Launch with 10 beta users from r/selfimprovement and track which lessons get completed versus abandoned. Abandoned lessons reveal the content gaps. Completed lessons in sequence reveal the skill progressions worth doubling down on. Groundset runs $20 a month for daily micro-lessons and $500 for the complete mastery program. One promotion cycle where a junior professional credits Groundset is worth a hundred ads in the communities where young professionals already talk about what's holding them back. Corporate team licenses follow naturally once individual users bring it into their workplace conversations. BetterUp charges enterprise rates for coaching that assumes a dedicated HR budget. Groundset starts where the individual professional can actually afford to begin.
+
+View Full Report
+Build This Idea
+Idea Actions
+Interested
+Not Interested
+Save
+Building
+Finance app that builds money habits in three minutes a day
+Idea of the Day Mar 18, 2026
+
+Gen Z watches more personal finance content than any generation before them. Budget breakdowns on TikTok. Compound interest explained on YouTube. Dave Ramsey clips in every algorithm. The average 24-year-old can explain an index fund and has $800 in savings. The content taught the concept. Nothing taught the behavior. Coinstack connects to a bank account and turns real transaction data into daily challenges that take three minutes. A challenge about impulse buying pulls from the last two weeks of purchases, not a textbook scenario. Each one unlocks through a completed action, not a video watched. Streaks build momentum. A behavioral profile tracks which spending habits shift first, which ones resist, and what sequence breaks the pattern. The profile sharpens with every completed and skipped challenge, building a map of financial behavior no budgeting app has collected. Build 20 challenges covering spending awareness, saving triggers, and debt basics. Connect to bank accounts through Plaid so every challenge references real purchases. Test with 50 users from r/personalfinance and track one metric: do users who complete three consecutive daily challenges change a measurable spending behavior within 30 days? If yes, the product works. If not, no amount of gamification saves it. The honest constraint is content velocity. Twenty challenges covers a month. Retention past day 30 requires a library deep enough that the daily prompt still surprises. Free tier builds the streak. $5 a month unlocks premium challenges. $10 gets the full academy with real-time bank data. HR departments buy financial wellness tools, but the options are content libraries that collect dust. Coinstack carries a pitch those tools never could: measurable behavior change across a workforce, reported quarterly. One employer contract covering 500 employees generates more revenue than 1,000 individual subscribers. What changes spending habits, in what order, for which demographics. That dataset only exists inside the product.
+
+View Full Report
+Build This Idea
+Idea Actions
+Interested
+Not Interested
+Save
+Building
+AI posture coach that fixes your slouch before your back breaks
+Released Mar 18, 2026
+
+Chronic back pain is the leading cause of disability worldwide. Wearable correctors sold millions of units and ended up in drawers. Reminder apps got ignored after a week. The problem was never awareness. It was that nothing caught the slouch the moment it happened, before the damage was already done. Sitright runs through the laptop camera on the desk. It sets a posture baseline, then monitors alignment while work happens. A nudge fires the moment the shoulders cave. No new hardware. No behavior change required to start. The system tracks how each person drifts and which corrections stick. A worker who slouches forward under deadline pressure gets a different nudge than one who sinks into the chair after lunch. Nudges sharpen over time. The alerts that would have been ignored stop firing. Build the pose detection layer first using browser-based computer vision. Shoulder and neck tracking against the onboarding baseline is enough to ship. The real engineering challenge is nudge calibration: too frequent and alerts become noise, too sparse and the slouch compounds. Log every dismissed alert from the start. Dismissals are the signal. They reveal which cues change behavior and which ones train people to close the app. Add a weekly posture trend dashboard so users see progress between sessions - visible improvement is what keeps a wellness app alive past the first month. Thirty days of posture data across ten users with chronic back pain is the only validation that matters before scaling. Sitright charges $14.99 a month. One physical therapy session costs ten times that. Remote-first companies self-insure against musculoskeletal claims averaging $34,000 per employee. A wellness benefit that prevents the problem costs less than the first appointment to treat it. An $8 annual per-seat license is an easy procurement conversation for an HR team that just processed a workers comp claim. A 500-person contract covers more revenue than 330 individual subscribers. The individual users are not the business. They are the training set. Every correction logged builds a detection model that a camera library alone cannot replicate.
+
+View Full Report
+Build This Idea
+Idea Actions
+Interested
+Not Interested
+Save
+Building
+Dating skills app that gamifies emotional intelligence training
+Released Mar 18, 2026
+
+Dating apps are extraordinarily good at one thing: getting two people in front of each other. Everything that happens after that is entirely up to skills most people never developed, because the apps that facilitated the introduction had no stake in what came next. The apps kept improving the algorithm. The conversation that follows relies on the same emotional intelligence it always did. Realore teaches the skills that come after the match. Bite-sized modules cover reading mixed signals, asking questions that go somewhere, and recovering when things get awkward. Scenario-based practice puts those skills into situations that feel real: a conversation that's losing momentum, a date that's going well but needs a push, a text that could mean three different things. Points, streaks, and unlockable content build the daily habit. Every scenario replayed and every module completed reveals which skills users struggle with most, sharpening the curriculum around where people actually get stuck. Build 10 to 15 core modules covering conversation momentum, emotional recovery after rejection, and reading body language. A simple app framework with scenario-based questions and immediate feedback is the first useful version. AI generates dynamic practice conversations that adapt based on user responses, which is what separates structured practice from passive content consumption. Test with 50 early users from Reddit dating advice communities and track which scenarios get replayed. Replay rate is the signal that a scenario is hitting a real nerve worth building more of. Realore runs free with a quiz that locks after three lessons, then $9.99 a month for core modules and $29.99 for the complete program with personalized AI coaching feedback. Dating coaches who want to scale their methods beyond one-on-one sessions are the distribution partner. One coach with an existing audience seeds hundreds of users who already know they need exactly this. The skill gap dating apps never addressed has been sitting in plain sight for twenty years. Realore is the first product built specifically for the part that comes after the swipe.
+
+View Full Report
+Build This Idea
+Idea Actions
+Interested
+Not Interested
+Save
+Building
+After-hours gig platform for people the service economy forgot
+Released Mar 18, 2026
+
+Shift workers finish a late-night hospital rotation and need a locksmith, a grocery run, or a repair handled before the next shift starts. The on-demand economy built itself around nine-to-five demand patterns. The infrastructure that exists after hours is thin, unreliable, and priced for emergencies because supply is so low. A quarter of the workforce runs on a schedule the service economy never accounted for. Noctask is an after-hours service platform connecting urban residents with vetted gig workers available through the night. Handymen, cleaners, grocery shoppers, tech support, and emergency movers are all bookable when daytime platforms have gone quiet. Workers set their available hours and service categories. Surge pricing keeps supply active during peak late-night demand. Background checks and insurance coverage handle the trust layer that makes a stranger showing up at night feel like a reasonable thing to do. Start in one city with 20 workers who already run night schedules and 3 core service categories: locksmith, cleaning, and grocery delivery. Recruit workers through hospitals, security firms, and call centers, institutions with existing night staff who want supplemental income and a flexible platform to find it. Build the matching logic before anything else: proximity, rating, and availability window. The honest supply-side challenge is reliability. A worker who accepts a booking at two in the morning and cancels is worse than no platform at all. Vet harder than feels necessary before launch. Noctask charges $10 to $50 per service plus a 20% platform fee, with a $29.99 per month subscription for frequent users with priority matching and reduced rates. The recurring buyer is the shift worker with predictable after-hours needs, not the occasional emergency. Hospitals and care facilities are the natural institutional expansion: bulk subscriptions for staff who finish late and need reliable services waiting. The after-hours window is not a niche. It is an unserved shift.
+
+View Full Report
+Build This Idea
+Idea Actions
+Interested
+Not Interested
+Save
+Building
+1-12 of 1365 results
+
+Rows per page
+
+12
+Page 1 of 114
+Go to first page
+Go to previous page
+Go to next page
+Go to last page
+
+Get ideas for profitable startups, trending keywords, and go-to-market tactics, powered by data.
+
+Browse Ideas
+Idea of the Day
+Idea Database
+Trends
+Market Insights
+Tools
+Idea Generator
+Research Your Ideas
+Idea Builder
+Chat & Strategize
+Founder Fit
+Resources
+Platform Tour
+Features
+Tools Library
+Pricing
+FAQ
+Company
+About
+Success Stories
+Announcements
+What's New
+Contact & Support
+
+© 2026 Ideabrowser. All rights reserved.
+
+Terms and Conditions
+Privacy Policy
+Data Protection
+Disclaimer
+
+Ideabrowser shares research and education, not promises or advice. Revenue estimates, scores, and examples are illustrative only; your results will vary. Always do your own due diligence.

@@ -1,0 +1,13 @@
+{
+  "name": "scrapper",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "scrape": "node scripts/scrape-ideas.mjs",
+    "server": "node server.mjs"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "playwright": "^1.55.0"
+  }
+}

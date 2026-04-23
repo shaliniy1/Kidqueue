@@ -1,0 +1,411 @@
+Find Ideas
+Build Ideas
+Pricing
+More
+Login
+Sign Up
+Startup Tools
+
+A list of tools to help you go from startup idea to execution.
+
+SEARCH TOOLS
+
+54 tools found
+
+COLLECTIONS
+All
+(54)
+The Research Stack
+The MVP Builder Stack
+The Content Creator Stack
+The Automation Stack
+The Growth Stack
+CATEGORIES
+All Tools
+(54)
+AI Search
+(3)
+AI Research
+(1)
+AI Agents
+(2)
+AI Coding
+(1)
+Voice AI
+(1)
+Web Scraping
+(1)
+Email Tools
+(2)
+SEO Tools
+(1)
+Backend Services
+(1)
+Hosting & Deployment
+(1)
+Development & Code
+(12)
+Content & Marketing
+(13)
+Automation & Workflows
+(10)
+Analytics & Growth
+(5)
+THE RESEARCH STACK
+
+Everything you need to validate and research your ideas
+
+Exa
+
+Finds the unfindable, Finding obscure information
+
+Freemium
+Firecrawl
+
+Scrapes the internet, Making llm.txt for GEO
+
+Paid
+DataforSEO
+
+Keywords and search demand, SEO analysis
+
+Paid
+Perplexity
+
+MCP search API, Programmatic search
+
+Freemium
+Hunter.io
+
+Enrichment, Email enrichment
+
+Freemium
+Manus
+
+Research, In-depth research
+
+Paid
+THE MVP BUILDER STACK
+
+Go from idea to working product fast
+
+Supabase
+
+User-friendly database, auth, Database and authentication for apps
+
+Freemium
+Vercel
+
+Hosting, Website and application hosting
+
+Freemium
+Bolt
+
+Building landing pages, Quickly building landing pages
+
+Paid
+Lovable
+
+Building landing pages, Quickly building landing pages
+
+Paid
+Replit
+
+Building landing pages, Building web applications
+
+Freemium
+v0
+
+Building landing pages, Building web applications
+
+Free
+Cursor
+
+Agentic IDE, AI-powered coding environment
+
+Freemium
+Resend
+
+React-native emails, programmatic emails, Sending programmatic emails
+
+Freemium
+Railway
+
+Database and hosting, Database and application hosting
+
+Freemium
+Webflow
+
+Building landing pages, Visual web design and CMS
+
+Freemium
+THE CONTENT CREATOR STACK
+
+Build your brand and marketing assets
+
+Midjourney
+
+Image generation, Creating AI-generated images
+
+Paid
+Arcads
+
+UGC AI Ads, Generating user-generated content ads
+
+Paid
+Reel Farm
+
+Video content creation, Creating short-form video content
+
+Paid
+Banner Bear
+
+Image and banner generation, Automating image and banner creation
+
+Freemium
+GenViral
+
+Viral content generation, Creating viral content
+
+Paid
+Veo3
+
+Video generation, Creating AI-generated videos
+
+Paid
+Higgsfield
+
+Video generation, Creating AI-generated videos
+
+Paid
+Post Bridge
+
+Content distribution, Distributing content across platforms
+
+Paid
+Creator Hunter
+
+Influencer marketing, Finding and collaborating with creators
+
+Paid
+Ideogram
+
+Character parity from reference image
+
+Freemium
+Resend
+
+React-native emails, programmatic emails, Sending programmatic emails
+
+Freemium
+DEAL
+Riverside
+
+Your all-in-one studio to record in high quality, edit in a flash, and go live with a bang. All with AI that works with you.
+
+Paid
+THE AUTOMATION STACK
+
+Scale your operations without hiring
+
+Zapier
+
+Simple, daily driver, Basic automations
+
+Freemium
+n8n
+
+Self-hosted, flexible agent systems, Complex and custom automations
+
+Free
+Lindy
+
+Best for field mapping automations (smart matching is really good), Smart field mapping and automations
+
+Paid
+Gumloop
+
+Best for browser-based triggers, Automations triggered by browser actions
+
+Paid
+String.com
+
+New from pipedream, text to agent, Creating agents from text
+
+Paid
+Gemini
+
+Watches videos and you can get it to do things
+
+Free
+Browserbase
+
+Powers web browsing capabilities for AI agents and applications, Enabling web browsing for AI
+
+Paid
+Playwright MCP
+
+Webbrowsing and API testing, Automated browser and API testing
+
+Free
+Parse.bot
+
+Prompt to script to reusable API, Converting prompts to APIs
+
+Paid
+Manychat
+
+IG short form automation, Instagram automation
+
+Freemium
+THE GROWTH STACK
+
+Measure, analyze, and optimize for scale
+
+PostHog
+
+Product analytics, Understanding user behavior
+
+Freemium
+Julius.ai
+
+Chat with data, Conversational data analysis
+
+Freemium
+Hunter.io
+
+Enrichment, Email enrichment
+
+Freemium
+Sentry
+
+Error handling, Monitoring and fixing errors
+
+Freemium
+Humblytics
+
+Website analytics, 1 click set up, Quick website analytics setup
+
+Freemium
+Graphed
+
+Create dashboards with chat, Interactive data dashboards
+
+Paid
+AI TOOLS
+
+Artificial intelligence and machine learning tools
+
+Perplexity
+
+MCP search API, Programmatic search
+
+Freemium
+Manus
+
+Research, In-depth research
+
+Paid
+VAPI
+
+Voice agents, Building voice assistants
+
+Paid
+Genspark
+
+Decks, research, and super agent, Creating presentations and comprehensive research
+
+Paid
+Claude
+
+Spawn sub-agents that design, research, write code etc
+
+Freemium
+Exa
+
+Finds the unfindable, Finding obscure information
+
+Freemium
+OpenRouter
+
+Model router/aggregator — one API to many LLMs.
+
+Paid
+Bolt
+
+Building landing pages, Quickly building landing pages
+
+Paid
+DEVELOPMENT
+
+Development and technical tools
+
+Supabase
+
+User-friendly database, auth, Database and authentication for apps
+
+Freemium
+Vercel
+
+Hosting, Website and application hosting
+
+Freemium
+Firecrawl
+
+Scrapes the internet, Making llm.txt for GEO
+
+Paid
+MARKETING & SEO
+
+Marketing, SEO and email tools
+
+Hunter.io
+
+Enrichment, Email enrichment
+
+Freemium
+Resend
+
+React-native emails, programmatic emails, Sending programmatic emails
+
+Freemium
+DataforSEO
+
+Keywords and search demand, SEO analysis
+
+Paid
+
+Get ideas for profitable startups, trending keywords, and go-to-market tactics, powered by data.
+
+Browse Ideas
+Idea of the Day
+Idea Database
+Trends
+Market Insights
+Tools
+Idea Generator
+Research Your Ideas
+Idea Builder
+Chat & Strategize
+Founder Fit
+Resources
+Platform Tour
+Features
+Tools Library
+Pricing
+FAQ
+Company
+About
+Success Stories
+Announcements
+What's New
+Contact & Support
+
+© 2026 Ideabrowser. All rights reserved.
+
+Terms and Conditions
+Privacy Policy
+Data Protection
+Disclaimer
+
+Ideabrowser shares research and education, not promises or advice. Revenue estimates, scores, and examples are illustrative only; your results will vary. Always do your own due diligence.

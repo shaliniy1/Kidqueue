@@ -27,6 +27,8 @@ const ui = {
   childPlayBtn: document.getElementById("childPlayBtn"),
   childPauseBtn: document.getElementById("childPauseBtn"),
   childNextBtn: document.getElementById("childNextBtn"),
+  childFullscreenBtn: document.getElementById("childFullscreenBtn"),
+  playerWrap: document.querySelector("#childView .player-wrap"),
   nowPlaying: document.getElementById("nowPlaying"),
   nextRow: document.getElementById("nextRow"),
   nextPlaying: document.getElementById("nextPlaying"),
@@ -43,8 +45,19 @@ let isPaused = false;
 let consecutiveErrors = 0;
 
 function showView(key) {
+  const wasChild = document.body.dataset.view === "child";
+  if (wasChild && key !== "child") {
+    stopChildPlayback();
+  }
+
   Object.values(views).forEach((v) => v.classList.add("hidden"));
   views[key].classList.remove("hidden");
+
+  const navKey = key === "child" ? "child" : key === "parent" || key === "parentGate" ? "parent" : "home";
+  document.body.dataset.view = navKey;
+  document.querySelectorAll(".menu-item[data-nav]").forEach((item) => {
+    item.classList.toggle("active", item.dataset.nav === navKey);
+  });
 }
 
 function loadPlaylist() {
@@ -132,6 +145,39 @@ function buildVideo(rawUrl) {
   };
 }
 
+function isFallbackTitle(title, id) {
+  return title === `Video ${id}`;
+}
+
+async function fetchYoutubeTitle(url) {
+  try {
+    const endpoint = `https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`;
+    const res = await fetch(endpoint);
+    if (!res.ok) return "";
+    const data = await res.json();
+    return typeof data.title === "string" ? data.title.trim() : "";
+  } catch {
+    return "";
+  }
+}
+
+async function enrichVideoTitle(video) {
+  if (!video?.id || !video?.url) return;
+  if (video.title && !isFallbackTitle(video.title, video.id)) return;
+
+  const resolvedTitle = await fetchYoutubeTitle(video.url);
+  if (!resolvedTitle) return;
+
+  const target = playlist.find((item) => item.id === video.id);
+  if (!target) return;
+  if (target.title === resolvedTitle) return;
+
+  target.title = resolvedTitle;
+  savePlaylist();
+  renderPlaylist();
+  refreshNowNext();
+}
+
 function normalizeYoutubeUrl(raw) {
   const input = raw.trim();
   if (input.startsWith("www.")) return `https://${input}`;
@@ -161,17 +207,37 @@ function renderPlaylist() {
     const li = document.createElement("li");
     const meta = document.createElement("div");
     meta.className = "video-meta";
-    meta.innerHTML = `
-      <img src="${item.thumb}" alt="Video thumbnail">
-      <div>
-        <strong>${idx + 1}. ${item.title}</strong><br><small>${item.url}</small>
-      </div>
-    `;
+
+    const thumb = document.createElement("img");
+    thumb.src = item.thumb;
+    thumb.alt = "Video thumbnail";
+
+    const textWrap = document.createElement("div");
+    textWrap.className = "video-main";
+
+    const title = document.createElement("strong");
+    const fallbackTitle = item.id ? `Video ${item.id}` : "Video";
+    title.textContent = `${idx + 1}. ${item.title || fallbackTitle}`;
+
+    const verifyLink = document.createElement("a");
+    verifyLink.className = "verify-link";
+    verifyLink.target = "_blank";
+    verifyLink.rel = "noopener noreferrer";
+    verifyLink.textContent = "Verify";
+    verifyLink.href = item.url || (item.id ? `https://www.youtube.com/watch?v=${item.id}` : "#");
+
+    textWrap.appendChild(title);
+    textWrap.appendChild(verifyLink);
+    meta.appendChild(thumb);
+    meta.appendChild(textWrap);
 
     const controls = document.createElement("div");
     const removeBtn = document.createElement("button");
-    removeBtn.className = "btn danger";
-    removeBtn.textContent = "Remove";
+    removeBtn.type = "button";
+    removeBtn.className = "btn danger icon-btn remove-btn";
+    removeBtn.innerHTML = '<span aria-hidden="true">−</span>';
+    removeBtn.setAttribute("aria-label", "Remove video");
+    removeBtn.title = "Remove video";
     removeBtn.addEventListener("click", () => {
       playlist.splice(idx, 1);
       refreshAfterPlaylistChange();
@@ -202,6 +268,7 @@ function addVideoFromInput(url) {
 
   playlist.push(item);
   refreshAfterPlaylistChange();
+  enrichVideoTitle(item);
   setMsg(ui.urlMsg, "Video added.");
   return true;
 }
@@ -355,7 +422,7 @@ function refreshChildState() {
   ui.childPlayBtn.disabled = false;
   ui.childPlayBtn.classList.remove("hidden");
   ui.childPauseBtn.disabled = false;
-  ui.childPauseBtn.textContent = "Pause";
+  ui.childPauseBtn.textContent = isPaused ? "Resume" : "Pause";
   ui.childNextBtn.disabled = false;
   setMsg(ui.childStatus, `${playlist.length} approved video(s). Tap Start Playlist to begin.`);
   refreshNowNext();
@@ -395,11 +462,38 @@ function togglePause() {
   }
 }
 
+function stopChildPlayback() {
+  if (player) {
+    try {
+      player.pauseVideo();
+    } catch {
+      // Ignore player timing errors when iframe is not fully ready.
+    }
+  }
+  isPaused = true;
+  ui.childPauseBtn.textContent = "Resume";
+  ui.childPlayBtn.classList.remove("hidden");
+}
+
+function toggleFullscreen() {
+  const target = ui.playerWrap;
+  if (!target) return;
+
+  if (document.fullscreenElement) {
+    document.exitFullscreen().catch(() => {});
+    return;
+  }
+
+  if (typeof target.requestFullscreen === "function") {
+    target.requestFullscreen().catch(() => {});
+  }
+}
+
 function initPlayerIfReady() {
   if (!ytApiReady || player || !document.getElementById("ytPlayer")) return;
 
   const playerVars = {
-    autoplay: 1,
+    autoplay: 0,
     controls: 0,
     disablekb: 1,
     fs: 0,
@@ -416,9 +510,7 @@ function initPlayerIfReady() {
     videoId: playlist[0]?.id || "",
     playerVars,
     events: {
-      onReady: () => {
-        if (playlist.length) playCurrentVideo();
-      },
+      onReady: () => {},
       onStateChange: (event) => {
         if (event.data === YT.PlayerState.PLAYING) {
           consecutiveErrors = 0;
@@ -452,6 +544,15 @@ function openChildMode() {
   currentIndex = 0;
   initPlayerIfReady();
   refreshChildState();
+}
+
+function openParentGate() {
+  const rememberedParent =
+    localStorage.getItem(LAST_PARENT_KEY) || getCookie("kidzqueue_parent") || "";
+  ui.parentIdInput.value = rememberedParent;
+  ui.pinInput.value = "";
+  setMsg(ui.pinMsg, "");
+  showView("parentGate");
 }
 
 function submitParentPin() {
@@ -490,12 +591,7 @@ function submitParentPin() {
 }
 
 ui.openParentBtn.addEventListener("click", () => {
-  const rememberedParent =
-    localStorage.getItem(LAST_PARENT_KEY) || getCookie("kidzqueue_parent") || "";
-  ui.parentIdInput.value = rememberedParent;
-  ui.pinInput.value = "";
-  setMsg(ui.pinMsg, "");
-  showView("parentGate");
+  openParentGate();
 });
 
 ui.openChildBtn.addEventListener("click", () => {
@@ -509,6 +605,9 @@ ui.childPauseBtn.addEventListener("click", () => {
 });
 ui.childNextBtn.addEventListener("click", () => {
   goToNextVideo();
+});
+ui.childFullscreenBtn.addEventListener("click", () => {
+  toggleFullscreen();
 });
 ui.childBackBtn.addEventListener("click", () => {
   showView("home");
@@ -542,6 +641,21 @@ ui.pdfInput.addEventListener("change", (e) => {
 
 document.querySelectorAll("[data-back-home]").forEach((btn) => {
   btn.addEventListener("click", () => showView("home"));
+});
+
+document.querySelectorAll(".menu-item[data-nav]").forEach((item) => {
+  item.addEventListener("click", () => {
+    const nav = item.dataset.nav;
+    if (nav === "parent") {
+      openParentGate();
+      return;
+    }
+    if (nav === "child") {
+      openChildMode();
+      return;
+    }
+    showView("home");
+  });
 });
 
 migrateLegacyPinIfNeeded();

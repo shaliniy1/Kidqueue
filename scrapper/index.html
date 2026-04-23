@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scrapper</title>
+    <link rel="stylesheet" href="styles.css?v=20260227-1" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Scrapper</p>
+          <h1>Idea of the Day Scraper</h1>
+          <p class="lede">
+            Crawl pages, capture sections, and export PDF snapshots for each idea.
+          </p>
+        </div>
+        <div class="hero-actions">
+          <button id="startScrapeBtn" class="btn primary">Start Scrape</button>
+          <button id="refreshRunsBtn" class="btn ghost">Refresh Runs</button>
+        </div>
+      </header>
+
+      <section class="card grid">
+        <div class="panel">
+          <h2>Scrape Settings</h2>
+          <label>
+            Base URL
+            <input id="baseUrl" type="url" placeholder="https://example.com/idea-of-the-day" required />
+          </label>
+          <label>
+            Seed URLs (comma-separated)
+            <input id="seedUrls" type="text" placeholder="Optional extra start pages" />
+          </label>
+          <label>
+            Link include keywords
+            <input id="linkInclude" type="text" value="idea-of-the-day,idea,ideas" />
+          </label>
+          <label>
+            Link exclude keywords
+            <input id="linkExclude" type="text" value="login,signup,account,privacy,terms,contact,cart,checkout" />
+          </label>
+          <label>
+            Crawl include keywords
+            <input id="crawlInclude" type="text" value="idea-of-the-day,idea,ideas,archive,browse" />
+          </label>
+          <label>
+            Link regex (optional)
+            <input id="linkRegex" type="text" placeholder="idea-of-the-day" />
+          </label>
+          <div class="row two">
+            <label>
+              Max crawl pages
+              <input id="maxCrawlPages" type="number" min="1" value="30" />
+            </label>
+            <label>
+              Max idea pages (0 = no limit)
+              <input id="maxIdeaPages" type="number" min="0" value="0" />
+            </label>
+          </div>
+          <div class="row two">
+            <label>
+              Navigation timeout (ms)
+              <input id="navTimeoutMs" type="number" min="1000" value="45000" />
+            </label>
+            <label>
+              Slow motion (ms)
+              <input id="slowMoMs" type="number" min="0" value="0" />
+            </label>
+          </div>
+          <label class="checkbox">
+            <input id="headless" type="checkbox" checked />
+            Headless browser (disable to see the browser)
+          </label>
+          <p class="help">
+            The scraper runs locally on this machine. Keep crawl limits low and follow the target site's terms.
+          </p>
+        </div>
+
+        <div class="panel">
+          <h2>Run Status</h2>
+          <div id="runSummary" class="status-box">
+            <p>No run started yet.</p>
+          </div>
+          <h3>Live Log</h3>
+          <pre id="runLog" class="log-box">Waiting for a run...</pre>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <h2>Recent Runs</h2>
+          <span id="runsMeta" class="muted">Loading...</span>
+        </div>
+        <div id="runsList" class="runs-list"></div>
+      </section>
+    </main>
+
+    <script src="app.js?v=20260227-1"></script>
+  </body>
+</html>

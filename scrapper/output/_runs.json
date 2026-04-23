@@ -1,0 +1,22 @@
+[
+  {
+    "id": "1774267901914-1c267c",
+    "status": "completed",
+    "startedAt": "2026-03-23T12:11:41.915Z",
+    "finishedAt": "2026-03-23T12:19:12.964Z",
+    "outDir": "/Users/shalini/Documents/New project/ideabrowser-scraper/output/ideabrowser-2026-03-23T12-11-41-915Z-1774267901914-1c267c",
+    "logPath": "/Users/shalini/Documents/New project/ideabrowser-scraper/output/ideabrowser-2026-03-23T12-11-41-915Z-1774267901914-1c267c/run.log",
+    "exitCode": 0,
+    "logTail": "Scrape complete. 100 idea page(s) saved to /Users/shalini/Documents/New project/ideabrowser-scraper/output/ideabrowser-2026-03-23T12-11-41-915Z-1774267901914-1c267c\n"
+  },
+  {
+    "id": "1774267984873-90cd21",
+    "status": "completed",
+    "startedAt": "2026-03-23T12:13:04.874Z",
+    "finishedAt": "2026-03-23T12:19:09.922Z",
+    "outDir": "/Users/shalini/Documents/New project/ideabrowser-scraper/output/ideabrowser-2026-03-23T12-13-04-873Z-1774267984873-90cd21",
+    "logPath": "/Users/shalini/Documents/New project/ideabrowser-scraper/output/ideabrowser-2026-03-23T12-13-04-873Z-1774267984873-90cd21/run.log",
+    "exitCode": 0,
+    "logTail": "Scrape complete. 80 idea page(s) saved to /Users/shalini/Documents/New project/ideabrowser-scraper/output/ideabrowser-2026-03-23T12-13-04-873Z-1774267984873-90cd21\n"
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "url": "https://www.ideabrowser.com/announcements",
+  "scrapedAt": "2026-03-23T12:14:07.802Z",
+  "title": "Announcements",
+  "description": "Important updates and announcements from the Ideabrowser team.",
+  "headings": [
+    "Lock in Launch Pricing Before October 24th"
+  ],
+  "sections": [
+    {
+      "heading": "Lock in Launch Pricing Before October 24th",
+      "text": "Launch pricing ends October 24th. Lock in lifetime pricing before prices increase to $499/year (Starter) and $1,499/year (Pro)."
+    }
+  ],
+  "text": "Oct 8, 2025\nPricing\nLock in Launch Pricing Before October 24th\n\nLaunch pricing ends October 24th. Lock in lifetime pricing before prices increase to $499/year (Starter) and $1,499/year (Pro).",
+  "html": "<div class=\"flex items-center gap-x-4 text-sm\"><time datetime=\"2025-10-08\" class=\"__className_d96fa1 text-gray-500\">Oct 8, 2025</time><a class=\"__className_d96fa1 relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100 transition-colors\" href=\"/pricing\">Pricing</a></div><div class=\"group relative mt-8\"><h3 class=\"__className_315a98 text-2xl font-semibold leading-7 text-gray-900 group-hover:text-gray-600 transition-colors\"><a href=\"/announcements/lock-in-launch-pricing\"><span class=\"absolute inset-0\"></span>Lock in Launch Pricing Before October 24th</a></h3><p class=\"__className_d96fa1 mt-4 text-base leading-7 text-gray-600 line-clamp-3\">Launch pricing ends October 24th. Lock in lifetime pricing before prices increase to $499/year (Starter) and $1,499/year (Pro).</p></div>"
+}

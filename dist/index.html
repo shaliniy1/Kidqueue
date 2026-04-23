@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KidzQueue - Safe Video Player</title>
+    <link rel="stylesheet" crossorigin href="/assets/index-CuSb8jOT.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <span class="brand-mark">K</span>
+          <div>
+            <strong>KidzQueue</strong>
+            <small>Safe player</small>
+          </div>
+        </div>
+
+        <nav class="menu" aria-label="App Sections">
+          <button type="button" class="menu-item active" data-nav="home">Home</button>
+          <button type="button" class="menu-item" data-nav="parent">Parent</button>
+          <button type="button" class="menu-item" data-nav="child">Kid Mode</button>
+        </nav>
+      </aside>
+
+      <section class="content-area">
+        <header class="hero">
+          <h1>KidzQueue</h1>
+          <p>Parent-curated, touch-locked learning video player for kids.</p>
+        </header>
+
+        <section id="homeView" class="card">
+          <h2>Who is using KidzQueue today?</h2>
+          <div class="actions">
+            <button id="openParentBtn" class="btn primary">I am a Parent</button>
+            <button id="openChildBtn" class="btn accent">I am a Kid</button>
+          </div>
+        </section>
+
+        <section id="parentGateView" class="card hidden">
+          <h2>Parent Check</h2>
+          <p>Type your profile and 4-digit PIN.</p>
+          <input id="parentIdInput" type="text" placeholder="Parent name or email" />
+          <input id="pinInput" type="password" maxlength="4" inputmode="numeric" placeholder="4-digit PIN" />
+          <div class="actions">
+            <button id="submitPinBtn" class="btn primary">Continue</button>
+            <button data-back-home class="btn ghost">Back</button>
+          </div>
+          <p id="pinMsg" class="info"></p>
+        </section>
+
+        <section id="parentView" class="card hidden">
+          <div class="section-head">
+            <h2>Parent Controls</h2>
+            <button data-back-home class="btn ghost">Exit</button>
+          </div>
+
+          <div class="panel">
+            <h3>Add YouTube URL</h3>
+            <div class="row">
+              <input id="urlInput" type="url" placeholder="Paste YouTube URL" />
+              <button id="addUrlBtn" class="btn primary">Add</button>
+            </div>
+            <p id="urlMsg" class="info"></p>
+          </div>
+
+          <div class="panel">
+            <h3>Import from PDF (teacher assignment)</h3>
+            <input id="pdfInput" type="file" accept="application/pdf" />
+            <div id="pdfResults" class="preview-list"></div>
+          </div>
+
+          <div class="panel">
+            <div class="section-head">
+              <h3>Playlist</h3>
+              <button id="clearPlaylistBtn" class="btn danger">Clear All</button>
+            </div>
+            <ul id="playlistList" class="playlist"></ul>
+          </div>
+        </section>
+
+        <section id="childView" class="card hidden">
+          <div class="section-head">
+            <h2>Kid Player</h2>
+            <button id="childBackBtn" class="btn ghost">Back</button>
+          </div>
+          <p id="childStatus" class="info"></p>
+
+          <div class="player-wrap">
+            <div id="ytPlayer"></div>
+            <div class="touch-guard" aria-hidden="true"></div>
+          </div>
+          <div class="child-controls">
+            <button id="childPlayBtn" class="btn accent">Start Playlist</button>
+            <button id="childPauseBtn" class="btn ghost">Pause</button>
+            <button id="childNextBtn" class="btn primary">Next Video</button>
+            <button id="childFullscreenBtn" class="btn ghost">Maximize</button>
+          </div>
+
+          <div class="now-playing">
+            <p><strong>Now:</strong> <span id="nowPlaying">-</span></p>
+            <p id="nextRow"><strong>Next:</strong> <span id="nextPlaying">-</span></p>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js" onerror="(function(){var s=document.createElement('script');s.src='https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js';document.head.appendChild(s);}())"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="app.js?v=20260422-2"></script>
+  </body>
+</html>
