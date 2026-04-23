@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>KidzQueue - Safe Video Player</title>
-    <link rel="stylesheet" href="styles.css?v=20260422-2" />
+    <link rel="stylesheet" href="styles.css?v=20260423-2" />
   </head>
   <body>
     <main class="app-shell">
@@ -38,16 +38,62 @@
           </div>
         </section>
 
-        <section id="parentGateView" class="card hidden">
-          <h2>Parent Check</h2>
-          <p>Type your profile and 4-digit PIN.</p>
-          <input id="parentIdInput" type="text" placeholder="Parent name or email" />
-          <input id="pinInput" type="password" maxlength="4" inputmode="numeric" placeholder="4-digit PIN" />
-          <div class="actions">
-            <button id="submitPinBtn" class="btn primary">Continue</button>
-            <button data-back-home class="btn ghost">Back</button>
+        <section id="parentSignInView" class="card auth-page hidden">
+          <h2>Parent Sign In</h2>
+          <p>Use your parent profile and 4-digit PIN.</p>
+          <div class="auth-form">
+            <input id="signInParentIdInput" type="text" placeholder="Parent name or email" />
+            <input id="signInPinInput" type="password" maxlength="4" inputmode="numeric" placeholder="4-digit PIN" />
+            <button id="signInBtn" type="button" class="btn primary">Sign In</button>
+            <div class="actions auth-links">
+              <button id="toSignUpBtn" type="button" class="btn ghost">Create Account</button>
+              <button id="toResetBtn" type="button" class="btn ghost">Forgot PIN</button>
+              <button data-back-home type="button" class="btn ghost">Back</button>
+            </div>
+            <p id="signInMsg" class="info"></p>
           </div>
-          <p id="pinMsg" class="info"></p>
+        </section>
+
+        <section id="parentSignUpView" class="card auth-page hidden">
+          <h2>Create Parent Account</h2>
+          <p>Set your username, PIN, and hint for recovery.</p>
+          <div class="auth-form">
+            <input id="newParentIdInput" type="text" placeholder="Parent name or email" />
+            <input id="newPinInput" type="password" maxlength="4" inputmode="numeric" placeholder="Set 4-digit PIN" />
+            <input id="confirmNewPinInput" type="password" maxlength="4" inputmode="numeric" placeholder="Confirm 4-digit PIN" />
+            <input id="hintQuestionInput" type="text" placeholder="Hint question (e.g. My favorite teacher?)" />
+            <input id="hintAnswerInput" type="text" placeholder="Hint answer" />
+            <button id="createSubmitBtn" type="button" class="btn primary">Create & Continue</button>
+            <div class="actions auth-links">
+              <button id="signUpToSignInBtn" type="button" class="btn ghost">Back to Sign In</button>
+              <button data-back-home type="button" class="btn ghost">Back Home</button>
+            </div>
+            <p id="signUpMsg" class="info"></p>
+          </div>
+        </section>
+
+        <section id="parentResetView" class="card auth-page hidden">
+          <h2>Reset Parent PIN</h2>
+          <p>Load your hint question, answer it, then set a new PIN.</p>
+          <div class="auth-form">
+            <input id="forgotParentIdInput" type="text" placeholder="Parent name or email" />
+            <button id="forgotContinueBtn" type="button" class="btn primary">Load Hint</button>
+
+            <div id="forgotHintWrap" class="hint-wrap hidden">
+              <p class="hint-label">Hint question</p>
+              <p id="forgotHintQuestion" class="hint-question"></p>
+              <input id="forgotAnswerInput" type="text" placeholder="Hint answer" />
+              <input id="resetPinInput" type="password" maxlength="4" inputmode="numeric" placeholder="New 4-digit PIN" />
+              <input id="confirmResetPinInput" type="password" maxlength="4" inputmode="numeric" placeholder="Confirm new 4-digit PIN" />
+              <button id="resetPinBtn" type="button" class="btn danger">Reset PIN</button>
+            </div>
+
+            <div class="actions auth-links">
+              <button id="resetToSignInBtn" type="button" class="btn ghost">Back to Sign In</button>
+              <button data-back-home type="button" class="btn ghost">Back Home</button>
+            </div>
+            <p id="resetMsg" class="info"></p>
+          </div>
         </section>
 
         <section id="parentView" class="card hidden">
@@ -108,6 +154,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js" onerror="(function(){var s=document.createElement('script');s.src='https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js';document.head.appendChild(s);}())"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
-    <script src="app.js?v=20260422-2"></script>
+    <script src="app.js?v=20260423-2"></script>
   </body>
 </html>

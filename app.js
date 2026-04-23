@@ -1,11 +1,19 @@
 const STORAGE_KEY = "kidzqueue-playlist";
+const PLAYLISTS_KEY = "kidzqueue-playlists-by-parent";
 const PIN_KEY = "kidzqueue-parent-pin";
 const PARENTS_KEY = "kidzqueue-parent-profiles";
 const LAST_PARENT_KEY = "kidzqueue-last-parent";
+const AUTH_SCHEMA_KEY = "kidzqueue-auth-schema-version";
+const AUTH_SCHEMA_VERSION = "2";
+const HASH_ITERATIONS = 120000;
+const MAX_FAILED_ATTEMPTS = 5;
+const LOCK_DURATION_MS = 5 * 60 * 1000;
 
 const views = {
   home: document.getElementById("homeView"),
-  parentGate: document.getElementById("parentGateView"),
+  parentSignIn: document.getElementById("parentSignInView"),
+  parentSignUp: document.getElementById("parentSignUpView"),
+  parentReset: document.getElementById("parentResetView"),
   parent: document.getElementById("parentView"),
   child: document.getElementById("childView"),
 };
@@ -13,10 +21,30 @@ const views = {
 const ui = {
   openParentBtn: document.getElementById("openParentBtn"),
   openChildBtn: document.getElementById("openChildBtn"),
-  submitPinBtn: document.getElementById("submitPinBtn"),
-  parentIdInput: document.getElementById("parentIdInput"),
-  pinInput: document.getElementById("pinInput"),
-  pinMsg: document.getElementById("pinMsg"),
+  signInBtn: document.getElementById("signInBtn"),
+  toSignUpBtn: document.getElementById("toSignUpBtn"),
+  toResetBtn: document.getElementById("toResetBtn"),
+  signInParentIdInput: document.getElementById("signInParentIdInput"),
+  signInPinInput: document.getElementById("signInPinInput"),
+  signInMsg: document.getElementById("signInMsg"),
+  newParentIdInput: document.getElementById("newParentIdInput"),
+  newPinInput: document.getElementById("newPinInput"),
+  confirmNewPinInput: document.getElementById("confirmNewPinInput"),
+  hintQuestionInput: document.getElementById("hintQuestionInput"),
+  hintAnswerInput: document.getElementById("hintAnswerInput"),
+  createSubmitBtn: document.getElementById("createSubmitBtn"),
+  signUpToSignInBtn: document.getElementById("signUpToSignInBtn"),
+  signUpMsg: document.getElementById("signUpMsg"),
+  forgotParentIdInput: document.getElementById("forgotParentIdInput"),
+  forgotContinueBtn: document.getElementById("forgotContinueBtn"),
+  forgotHintWrap: document.getElementById("forgotHintWrap"),
+  forgotHintQuestion: document.getElementById("forgotHintQuestion"),
+  forgotAnswerInput: document.getElementById("forgotAnswerInput"),
+  resetPinInput: document.getElementById("resetPinInput"),
+  confirmResetPinInput: document.getElementById("confirmResetPinInput"),
+  resetPinBtn: document.getElementById("resetPinBtn"),
+  resetToSignInBtn: document.getElementById("resetToSignInBtn"),
+  resetMsg: document.getElementById("resetMsg"),
   urlInput: document.getElementById("urlInput"),
   addUrlBtn: document.getElementById("addUrlBtn"),
   urlMsg: document.getElementById("urlMsg"),
@@ -36,13 +64,17 @@ const ui = {
   pdfResults: document.getElementById("pdfResults"),
 };
 
-let playlist = loadPlaylist();
+let playlist = [];
 let player;
-let currentIndex = 0;
 let ytApiReady = false;
 let lastImportedUrls = [];
 let isPaused = false;
 let consecutiveErrors = 0;
+let forgotParentId = "";
+let currentParentId = "";
+let kidPlaybackOrder = [];
+let kidPlaybackPos = 0;
+const textEncoder = new TextEncoder();
 
 function showView(key) {
   const wasChild = document.body.dataset.view === "child";
@@ -53,14 +85,14 @@ function showView(key) {
   Object.values(views).forEach((v) => v.classList.add("hidden"));
   views[key].classList.remove("hidden");
 
-  const navKey = key === "child" ? "child" : key === "parent" || key === "parentGate" ? "parent" : "home";
+  const navKey = key === "child" ? "child" : key.startsWith("parent") ? "parent" : "home";
   document.body.dataset.view = navKey;
   document.querySelectorAll(".menu-item[data-nav]").forEach((item) => {
     item.classList.toggle("active", item.dataset.nav === navKey);
   });
 }
 
-function loadPlaylist() {
+function loadLegacyPlaylist() {
   try {
     return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
   } catch {
@@ -68,10 +100,38 @@ function loadPlaylist() {
   }
 }
 
+function loadPlaylistsByParent() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(PLAYLISTS_KEY) || "{}");
+    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) return parsed;
+    return {};
+  } catch {
+    return {};
+  }
+}
+
+function savePlaylistsByParent(playlistsByParent) {
+  localStorage.setItem(PLAYLISTS_KEY, JSON.stringify(playlistsByParent));
+}
+
+function loadPlaylistForParent(parentId) {
+  if (!parentId) return [];
+  const playlistsByParent = loadPlaylistsByParent();
+  const list = playlistsByParent[parentId];
+  return Array.isArray(list) ? list : [];
+}
+
+function savePlaylistForParent(parentId, nextPlaylist) {
+  if (!parentId) return;
+  const playlistsByParent = loadPlaylistsByParent();
+  playlistsByParent[parentId] = nextPlaylist;
+  savePlaylistsByParent(playlistsByParent);
+}
+
 function loadParentProfiles() {
   try {
     const parsed = JSON.parse(localStorage.getItem(PARENTS_KEY) || "{}");
-    if (parsed && typeof parsed === "object") return parsed;
+    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) return parsed;
     return {};
   } catch {
     return {};
@@ -80,6 +140,13 @@ function loadParentProfiles() {
 
 function saveParentProfiles(profiles) {
   localStorage.setItem(PARENTS_KEY, JSON.stringify(profiles));
+}
+
+function getParentProfile(parentId) {
+  const profiles = loadParentProfiles();
+  const profile = profiles[parentId];
+  if (!profile || typeof profile !== "object") return null;
+  return profile;
 }
 
 function getCookie(name) {
@@ -95,17 +162,220 @@ function rememberParentProfile(parentId) {
 }
 
 function savePlaylist() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(playlist));
+  savePlaylistForParent(currentParentId, playlist);
 }
 
-function migrateLegacyPinIfNeeded() {
-  const legacyPin = localStorage.getItem(PIN_KEY);
-  if (!legacyPin) return;
-  const profiles = loadParentProfiles();
-  if (!Object.keys(profiles).length) {
-    profiles.default = legacyPin;
-    saveParentProfiles(profiles);
+function setActiveParent(parentId) {
+  currentParentId = parentId || "";
+  playlist = loadPlaylistForParent(currentParentId);
+  kidPlaybackOrder = [];
+  kidPlaybackPos = 0;
+  renderPlaylist();
+  refreshChildState();
+}
+
+function migrateLegacyPlaylistIfNeeded() {
+  const legacyPlaylist = loadLegacyPlaylist();
+  if (!legacyPlaylist.length) return;
+
+  const rememberedParent =
+    normalizeParentId(localStorage.getItem(LAST_PARENT_KEY) || getCookie("kidzqueue_parent") || "");
+  if (!rememberedParent) return;
+
+  const existing = loadPlaylistForParent(rememberedParent);
+  if (!existing.length) {
+    savePlaylistForParent(rememberedParent, legacyPlaylist);
   }
+  localStorage.removeItem(STORAGE_KEY);
+}
+
+function migrateAuthSchemaV2() {
+  const schemaVersion = localStorage.getItem(AUTH_SCHEMA_KEY);
+  if (schemaVersion === AUTH_SCHEMA_VERSION) return;
+  localStorage.removeItem(PIN_KEY);
+  localStorage.removeItem(PARENTS_KEY);
+  localStorage.removeItem(LAST_PARENT_KEY);
+  document.cookie = "kidzqueue_parent=; max-age=0; path=/; SameSite=Lax";
+  localStorage.setItem(AUTH_SCHEMA_KEY, AUTH_SCHEMA_VERSION);
+}
+
+function normalizeParentId(value) {
+  return value.trim().toLowerCase();
+}
+
+function normalizeHintAnswer(value) {
+  return value.trim().toLowerCase();
+}
+
+function isValidPin(pin) {
+  return /^\d{4}$/.test(pin);
+}
+
+function bytesToBase64(bytes) {
+  return btoa(String.fromCharCode(...bytes));
+}
+
+function base64ToBytes(base64) {
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i += 1) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes;
+}
+
+function generateSalt() {
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  return bytesToBase64(salt);
+}
+
+async function deriveHash(value, saltBase64) {
+  if (!window.crypto?.subtle) {
+    throw new Error("Secure crypto unavailable in this browser.");
+  }
+  const key = await crypto.subtle.importKey(
+    "raw",
+    textEncoder.encode(value),
+    "PBKDF2",
+    false,
+    ["deriveBits"],
+  );
+  const bits = await crypto.subtle.deriveBits(
+    {
+      name: "PBKDF2",
+      hash: "SHA-256",
+      salt: base64ToBytes(saltBase64),
+      iterations: HASH_ITERATIONS,
+    },
+    key,
+    256,
+  );
+  return bytesToBase64(new Uint8Array(bits));
+}
+
+async function hashAndSalt(value) {
+  const salt = generateSalt();
+  const hash = await deriveHash(value, salt);
+  return { salt, hash };
+}
+
+async function verifyHash(value, salt, expectedHash) {
+  const derived = await deriveHash(value, salt);
+  return derived === expectedHash;
+}
+
+function isLocked(profile) {
+  return Number(profile?.lockUntil || 0) > Date.now();
+}
+
+function lockRemainingMs(profile) {
+  return Math.max(0, Number(profile?.lockUntil || 0) - Date.now());
+}
+
+function formatRemainingTime(ms) {
+  const totalSeconds = Math.ceil(ms / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes}:${String(seconds).padStart(2, "0")}`;
+}
+
+async function createParentAccount({ parentId, pin, hintQuestion, hintAnswer }) {
+  const profiles = loadParentProfiles();
+  if (profiles[parentId]) {
+    return { ok: false, msg: "That parent profile already exists." };
+  }
+  const pinData = await hashAndSalt(pin);
+  const hintData = await hashAndSalt(normalizeHintAnswer(hintAnswer));
+  const now = new Date().toISOString();
+
+  profiles[parentId] = {
+    pinHash: pinData.hash,
+    pinSalt: pinData.salt,
+    hintQuestion: hintQuestion.trim(),
+    hintAnswerHash: hintData.hash,
+    hintSalt: hintData.salt,
+    createdAt: now,
+    updatedAt: now,
+    failedAttempts: 0,
+    lockUntil: 0,
+  };
+  saveParentProfiles(profiles);
+  return { ok: true };
+}
+
+async function signInParent({ parentId, pin }) {
+  const profiles = loadParentProfiles();
+  const profile = profiles[parentId];
+  if (!profile || typeof profile !== "object") {
+    return { ok: false, code: "USER_NOT_FOUND", msg: "User does not exist. Please sign up." };
+  }
+  if (isLocked(profile)) {
+    return {
+      ok: false,
+      code: "LOCKED",
+      msg: `Too many attempts. Try again in ${formatRemainingTime(lockRemainingMs(profile))}.`,
+    };
+  }
+
+  const valid = await verifyHash(pin, profile.pinSalt, profile.pinHash);
+  if (!valid) {
+    const failedAttempts = Number(profile.failedAttempts || 0) + 1;
+    profile.failedAttempts = failedAttempts;
+    profile.updatedAt = new Date().toISOString();
+    if (failedAttempts >= MAX_FAILED_ATTEMPTS) {
+      profile.failedAttempts = 0;
+      profile.lockUntil = Date.now() + LOCK_DURATION_MS;
+      saveParentProfiles(profiles);
+      return {
+        ok: false,
+        code: "LOCKED",
+        msg: `Too many attempts. Try again in ${formatRemainingTime(LOCK_DURATION_MS)}.`,
+      };
+    }
+    saveParentProfiles(profiles);
+    return { ok: false, code: "BAD_PIN", msg: "Incorrect PIN." };
+  }
+
+  profile.failedAttempts = 0;
+  profile.lockUntil = 0;
+  profile.updatedAt = new Date().toISOString();
+  saveParentProfiles(profiles);
+  return { ok: true, code: "OK" };
+}
+
+function beginForgotPin(parentId) {
+  const profiles = loadParentProfiles();
+  const profile = profiles[parentId];
+  if (!profile || typeof profile !== "object") {
+    return { ok: false };
+  }
+  return { ok: true, hintQuestion: profile.hintQuestion || "" };
+}
+
+async function verifyHintAnswerAndResetPin({ parentId, hintAnswer, newPin }) {
+  const profiles = loadParentProfiles();
+  const profile = profiles[parentId];
+  if (!profile || typeof profile !== "object") {
+    return { ok: false, msg: "Unable to reset PIN. Check your details and try again." };
+  }
+
+  const answerOk = await verifyHash(
+    normalizeHintAnswer(hintAnswer),
+    profile.hintSalt,
+    profile.hintAnswerHash,
+  );
+  if (!answerOk) {
+    return { ok: false, msg: "Hint answer is incorrect." };
+  }
+
+  const newPinData = await hashAndSalt(newPin);
+  profile.pinSalt = newPinData.salt;
+  profile.pinHash = newPinData.hash;
+  profile.failedAttempts = 0;
+  profile.lockUntil = 0;
+  profile.updatedAt = new Date().toISOString();
+  saveParentProfiles(profiles);
+  return { ok: true };
 }
 
 function getVideoIdFromUrl(raw) {
@@ -185,6 +455,12 @@ function normalizeYoutubeUrl(raw) {
 }
 
 function refreshAfterPlaylistChange() {
+  if (document.body.dataset.view === "child") {
+    syncKidPlaybackOrder();
+  } else if (!playlist.length) {
+    kidPlaybackOrder = [];
+    kidPlaybackPos = 0;
+  }
   savePlaylist();
   renderPlaylist();
   refreshChildState();
@@ -239,6 +515,10 @@ function renderPlaylist() {
     removeBtn.setAttribute("aria-label", "Remove video");
     removeBtn.title = "Remove video";
     removeBtn.addEventListener("click", () => {
+      if (!hasParentContext()) {
+        setMsg(ui.urlMsg, "Sign in as a parent to edit this playlist.");
+        return;
+      }
       playlist.splice(idx, 1);
       refreshAfterPlaylistChange();
     });
@@ -254,7 +534,45 @@ function setMsg(el, msg) {
   el.textContent = msg;
 }
 
+function setStatus(el, msg, tone = "") {
+  el.textContent = msg;
+  el.classList.remove("error", "success");
+  if (tone) el.classList.add(tone);
+}
+
+function hasParentContext() {
+  return Boolean(currentParentId && getParentProfile(currentParentId));
+}
+
+function resetAuthMessages() {
+  setStatus(ui.signInMsg, "");
+  setStatus(ui.signUpMsg, "");
+  setStatus(ui.resetMsg, "");
+}
+
+function resetCreateFields() {
+  ui.newParentIdInput.value = "";
+  ui.newPinInput.value = "";
+  ui.confirmNewPinInput.value = "";
+  ui.hintQuestionInput.value = "";
+  ui.hintAnswerInput.value = "";
+}
+
+function resetForgotFields() {
+  forgotParentId = "";
+  ui.forgotParentIdInput.value = "";
+  ui.forgotHintQuestion.textContent = "";
+  ui.forgotHintWrap.classList.add("hidden");
+  ui.forgotAnswerInput.value = "";
+  ui.resetPinInput.value = "";
+  ui.confirmResetPinInput.value = "";
+}
+
 function addVideoFromInput(url) {
+  if (!hasParentContext()) {
+    setMsg(ui.urlMsg, "Sign in as a parent to edit this playlist.");
+    return false;
+  }
   const item = buildVideo(url);
   if (!item) {
     setMsg(ui.urlMsg, "Invalid YouTube URL.");
@@ -398,19 +716,21 @@ function refreshNowNext() {
     return;
   }
 
-  const current = playlist[currentIndex];
-  const next = playlist[(currentIndex + 1) % playlist.length];
-  ui.nowPlaying.innerHTML = current
-    ? `<a href="${current.url}" target="_blank" rel="noopener noreferrer">${current.title}</a>`
-    : "-";
-  ui.nextPlaying.innerHTML = next
-    ? `<a href="${next.url}" target="_blank" rel="noopener noreferrer">${next.title}</a>`
-    : "-";
+  const current = getKidCurrentVideo();
+  const next = getKidNextVideo();
+  ui.nowPlaying.textContent = current ? getDisplayVideoTitle(current) : "-";
+  ui.nextPlaying.textContent = next ? getDisplayVideoTitle(next) : "-";
 }
 
 function refreshChildState() {
+  syncKidPlaybackOrder();
+
   if (!playlist.length) {
-    setMsg(ui.childStatus, "No videos available yet. Ask parent to add videos.");
+    if (!currentParentId || !getParentProfile(currentParentId)) {
+      setMsg(ui.childStatus, "No parent playlist selected yet. Ask a parent to sign in and add videos.");
+    } else {
+      setMsg(ui.childStatus, "No videos available yet. Ask parent to add videos.");
+    }
     ui.childPlayBtn.classList.remove("hidden");
     ui.childPlayBtn.disabled = true;
     ui.childPauseBtn.disabled = true;
@@ -430,10 +750,13 @@ function refreshChildState() {
 
 function playCurrentVideo() {
   if (!player || !playlist.length) return;
+  syncKidPlaybackOrder();
   isPaused = false;
   consecutiveErrors = 0;
   ui.childPauseBtn.textContent = "Pause";
-  const id = playlist[currentIndex]?.id;
+  const current = getKidCurrentVideo();
+  const id = current?.id;
+  if (!id) return;
   player.loadVideoById(id);
   player.playVideo();
   ui.childPlayBtn.classList.add("hidden");
@@ -444,9 +767,63 @@ function playCurrentVideo() {
 
 function goToNextVideo() {
   if (!playlist.length) return;
-  currentIndex = (currentIndex + 1) % playlist.length;
+  syncKidPlaybackOrder();
+  if (kidPlaybackOrder.length) {
+    kidPlaybackPos = (kidPlaybackPos + 1) % kidPlaybackOrder.length;
+  }
   playCurrentVideo();
   setMsg(ui.childStatus, "Playing approved video.");
+}
+
+function shuffleIndices(length) {
+  const indices = Array.from({ length }, (_, i) => i);
+  for (let i = indices.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [indices[i], indices[j]] = [indices[j], indices[i]];
+  }
+  return indices;
+}
+
+function syncKidPlaybackOrder({ forceRebuild = false } = {}) {
+  if (!playlist.length) {
+    kidPlaybackOrder = [];
+    kidPlaybackPos = 0;
+    return;
+  }
+
+  const hasInvalidLength = kidPlaybackOrder.length !== playlist.length;
+  const hasInvalidIndex = kidPlaybackOrder.some((index) => index < 0 || index >= playlist.length);
+
+  if (forceRebuild || hasInvalidLength || hasInvalidIndex) {
+    kidPlaybackOrder = shuffleIndices(playlist.length);
+    kidPlaybackPos = 0;
+    return;
+  }
+
+  if (kidPlaybackPos < 0 || kidPlaybackPos >= kidPlaybackOrder.length) {
+    kidPlaybackPos = 0;
+  }
+}
+
+function getKidCurrentVideo() {
+  syncKidPlaybackOrder();
+  if (!kidPlaybackOrder.length) return null;
+  const playlistIndex = kidPlaybackOrder[kidPlaybackPos];
+  return playlist[playlistIndex] || null;
+}
+
+function getKidNextVideo() {
+  syncKidPlaybackOrder();
+  if (!kidPlaybackOrder.length) return null;
+  const nextPos = (kidPlaybackPos + 1) % kidPlaybackOrder.length;
+  const playlistIndex = kidPlaybackOrder[nextPos];
+  return playlist[playlistIndex] || null;
+}
+
+function getDisplayVideoTitle(video) {
+  if (!video) return "-";
+  const fallbackTitle = video.id ? `Video ${video.id}` : "Video";
+  return video.title || fallbackTitle;
 }
 
 function togglePause() {
@@ -540,8 +917,15 @@ window.onYouTubeIframeAPIReady = () => {
 };
 
 function openChildMode() {
+  const rememberedParent =
+    normalizeParentId(localStorage.getItem(LAST_PARENT_KEY) || getCookie("kidzqueue_parent") || "");
+  if (rememberedParent && getParentProfile(rememberedParent)) {
+    setActiveParent(rememberedParent);
+  } else {
+    setActiveParent("");
+  }
+  syncKidPlaybackOrder({ forceRebuild: true });
   showView("child");
-  currentIndex = 0;
   initPlayerIfReady();
   refreshChildState();
 }
@@ -549,45 +933,145 @@ function openChildMode() {
 function openParentGate() {
   const rememberedParent =
     localStorage.getItem(LAST_PARENT_KEY) || getCookie("kidzqueue_parent") || "";
-  ui.parentIdInput.value = rememberedParent;
-  ui.pinInput.value = "";
-  setMsg(ui.pinMsg, "");
-  showView("parentGate");
+  ui.signInParentIdInput.value = rememberedParent;
+  ui.signInPinInput.value = "";
+  resetCreateFields();
+  resetForgotFields();
+  ui.forgotParentIdInput.value = rememberedParent;
+  ui.newParentIdInput.value = rememberedParent;
+  resetAuthMessages();
+  showView("parentSignIn");
 }
 
-function submitParentPin() {
-  const parentId = ui.parentIdInput.value.trim().toLowerCase();
-  const pin = ui.pinInput.value.trim();
+async function submitParentPin() {
+  const parentId = normalizeParentId(ui.signInParentIdInput.value);
+  const pin = ui.signInPinInput.value.trim();
   if (!parentId) {
-    setMsg(ui.pinMsg, "Enter parent name or email.");
+    setStatus(ui.signInMsg, "Enter parent name or email.", "error");
     return;
   }
-  if (!/^\d{4}$/.test(pin)) {
-    setMsg(ui.pinMsg, "PIN must be 4 digits.");
+  if (!isValidPin(pin)) {
+    setStatus(ui.signInMsg, "PIN must be 4 digits.", "error");
     return;
   }
 
-  const profiles = loadParentProfiles();
-  const existing = profiles[parentId];
-  if (!existing) {
-    profiles[parentId] = pin;
-    saveParentProfiles(profiles);
+  try {
+    const result = await signInParent({ parentId, pin });
+    if (!result.ok) {
+      setStatus(ui.signInMsg, result.msg, "error");
+      return;
+    }
     rememberParentProfile(parentId);
-    setMsg(ui.pinMsg, "PIN set. Parent unlocked.");
+    setActiveParent(parentId);
+    setStatus(ui.signInMsg, "Parent unlocked.", "success");
     showView("parent");
-    renderPlaylist();
+  } catch (err) {
+    setStatus(ui.signInMsg, `Sign in failed: ${err.message}`, "error");
+  }
+}
+
+async function submitCreateAccount() {
+  const parentId = normalizeParentId(ui.newParentIdInput.value);
+  const pin = ui.newPinInput.value.trim();
+  const confirmPin = ui.confirmNewPinInput.value.trim();
+  const hintQuestion = ui.hintQuestionInput.value.trim();
+  const hintAnswer = ui.hintAnswerInput.value.trim();
+
+  if (!parentId) {
+    setStatus(ui.signUpMsg, "Enter parent name or email.", "error");
+    return;
+  }
+  if (!isValidPin(pin)) {
+    setStatus(ui.signUpMsg, "PIN must be 4 digits.", "error");
+    return;
+  }
+  if (pin !== confirmPin) {
+    setStatus(ui.signUpMsg, "PIN and confirm PIN must match.", "error");
+    return;
+  }
+  if (hintQuestion.length < 6) {
+    setStatus(ui.signUpMsg, "Hint question must be at least 6 characters.", "error");
+    return;
+  }
+  if (hintAnswer.length < 2) {
+    setStatus(ui.signUpMsg, "Hint answer must be at least 2 characters.", "error");
     return;
   }
 
-  if (existing !== pin) {
-    setMsg(ui.pinMsg, "Incorrect PIN.");
+  try {
+    const result = await createParentAccount({ parentId, pin, hintQuestion, hintAnswer });
+    if (!result.ok) {
+      setStatus(ui.signUpMsg, result.msg, "error");
+      return;
+    }
+    rememberParentProfile(parentId);
+    setActiveParent(parentId);
+    setStatus(ui.signUpMsg, "Account created. Parent unlocked.", "success");
+    showView("parent");
+  } catch (err) {
+    setStatus(ui.signUpMsg, `Create account failed: ${err.message}`, "error");
+  }
+}
+
+function startForgotPinFlow() {
+  const parentId = normalizeParentId(ui.forgotParentIdInput.value);
+  if (!parentId) {
+    setStatus(ui.resetMsg, "Enter parent name or email.", "error");
+    return;
+  }
+  const result = beginForgotPin(parentId);
+  if (!result.ok) {
+    setStatus(ui.resetMsg, "User does not exist. Please sign up.", "error");
+    ui.forgotHintWrap.classList.add("hidden");
+    forgotParentId = "";
+    return;
+  }
+  forgotParentId = parentId;
+  ui.forgotHintQuestion.textContent = result.hintQuestion || "(No hint question saved.)";
+  ui.forgotHintWrap.classList.remove("hidden");
+  setStatus(ui.resetMsg, "Hint loaded. Provide answer and set new PIN.", "success");
+}
+
+async function submitForgotReset() {
+  const hintAnswer = ui.forgotAnswerInput.value.trim();
+  const newPin = ui.resetPinInput.value.trim();
+  const confirmPin = ui.confirmResetPinInput.value.trim();
+
+  if (!forgotParentId) {
+    setStatus(ui.resetMsg, "Start by entering your profile and loading the hint.", "error");
+    return;
+  }
+  if (hintAnswer.length < 2) {
+    setStatus(ui.resetMsg, "Enter your hint answer.", "error");
+    return;
+  }
+  if (!isValidPin(newPin)) {
+    setStatus(ui.resetMsg, "New PIN must be 4 digits.", "error");
+    return;
+  }
+  if (newPin !== confirmPin) {
+    setStatus(ui.resetMsg, "New PIN and confirm PIN must match.", "error");
     return;
   }
 
-  rememberParentProfile(parentId);
-  setMsg(ui.pinMsg, "Parent unlocked.");
-  showView("parent");
-  renderPlaylist();
+  try {
+    const result = await verifyHintAnswerAndResetPin({
+      parentId: forgotParentId,
+      hintAnswer,
+      newPin,
+    });
+    if (!result.ok) {
+      setStatus(ui.resetMsg, result.msg, "error");
+      return;
+    }
+    showView("parentSignIn");
+    ui.signInParentIdInput.value = forgotParentId;
+    ui.signInPinInput.value = "";
+    setStatus(ui.signInMsg, "PIN reset. Sign in with your new PIN.", "success");
+    resetForgotFields();
+  } catch (err) {
+    setStatus(ui.resetMsg, `Reset failed: ${err.message}`, "error");
+  }
 }
 
 ui.openParentBtn.addEventListener("click", () => {
@@ -613,12 +1097,62 @@ ui.childBackBtn.addEventListener("click", () => {
   showView("home");
 });
 
-ui.submitPinBtn.addEventListener("click", submitParentPin);
-ui.pinInput.addEventListener("keydown", (e) => {
+ui.signInBtn.addEventListener("click", () => {
+  submitParentPin();
+});
+ui.toSignUpBtn.addEventListener("click", () => {
+  resetAuthMessages();
+  resetCreateFields();
+  ui.newParentIdInput.value = normalizeParentId(ui.signInParentIdInput.value);
+  showView("parentSignUp");
+});
+ui.toResetBtn.addEventListener("click", () => {
+  resetAuthMessages();
+  resetForgotFields();
+  ui.forgotParentIdInput.value = normalizeParentId(ui.signInParentIdInput.value);
+  showView("parentReset");
+});
+ui.signUpToSignInBtn.addEventListener("click", () => {
+  resetAuthMessages();
+  resetCreateFields();
+  ui.signInParentIdInput.value = normalizeParentId(ui.newParentIdInput.value);
+  showView("parentSignIn");
+});
+ui.createSubmitBtn.addEventListener("click", () => {
+  submitCreateAccount();
+});
+ui.resetToSignInBtn.addEventListener("click", () => {
+  resetAuthMessages();
+  resetForgotFields();
+  ui.signInParentIdInput.value = normalizeParentId(ui.forgotParentIdInput.value);
+  showView("parentSignIn");
+});
+ui.forgotContinueBtn.addEventListener("click", () => {
+  startForgotPinFlow();
+});
+ui.resetPinBtn.addEventListener("click", () => {
+  submitForgotReset();
+});
+ui.signInPinInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") submitParentPin();
 });
-ui.parentIdInput.addEventListener("keydown", (e) => {
+ui.signInParentIdInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") submitParentPin();
+});
+ui.confirmNewPinInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") submitCreateAccount();
+});
+ui.hintAnswerInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") submitCreateAccount();
+});
+ui.forgotParentIdInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") startForgotPinFlow();
+});
+ui.confirmResetPinInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") submitForgotReset();
+});
+ui.forgotAnswerInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") submitForgotReset();
 });
 
 ui.addUrlBtn.addEventListener("click", () => {
@@ -629,6 +1163,10 @@ ui.addUrlBtn.addEventListener("click", () => {
 });
 
 ui.clearPlaylistBtn.addEventListener("click", () => {
+  if (!hasParentContext()) {
+    setMsg(ui.urlMsg, "Sign in as a parent to edit this playlist.");
+    return;
+  }
   playlist = [];
   refreshAfterPlaylistChange();
 });
@@ -658,7 +1196,7 @@ document.querySelectorAll(".menu-item[data-nav]").forEach((item) => {
   });
 });
 
-migrateLegacyPinIfNeeded();
-renderPlaylist();
-refreshChildState();
+migrateAuthSchemaV2();
+migrateLegacyPlaylistIfNeeded();
+setActiveParent("");
 showView("home");

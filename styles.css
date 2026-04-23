@@ -184,6 +184,49 @@ input::placeholder { color: #8ca0c3; }
 }
 
 .info { color: var(--ink-soft); margin: 0.55rem 0 0; font-size: 0.98rem; }
+.info.error { color: #b13e4a; }
+.info.success { color: #2b8a5f; }
+
+.auth-form {
+  display: grid;
+  gap: 0.65rem;
+  max-width: 560px;
+}
+
+.auth-page {
+  max-width: 700px;
+  margin-inline: auto;
+}
+
+.auth-links {
+  margin-top: 0.1rem;
+}
+
+.auth-links .btn {
+  flex: 1 1 170px;
+}
+
+.hint-wrap {
+  border: 1px solid #d3e0f5;
+  background: #f8fbff;
+  border-radius: 14px;
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.hint-label {
+  margin: 0;
+  color: #58739e;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.hint-question {
+  margin: 0;
+  color: #2d4f86;
+  font-weight: 700;
+}
 
 .playlist, .preview-list {
   margin: 0.75rem 0 0;
@@ -332,13 +375,17 @@ input::placeholder { color: #8ca0c3; }
   transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
 }
 
-#parentGateView,
+#parentSignInView,
+#parentSignUpView,
+#parentResetView,
 #parentView,
 #childView {
   border-width: 2px;
 }
 
-body[data-view="parent"] #parentGateView,
+body[data-view="parent"] #parentSignInView,
+body[data-view="parent"] #parentSignUpView,
+body[data-view="parent"] #parentResetView,
 body[data-view="parent"] #parentView {
   border-color: #bcd4ff;
   background: linear-gradient(180deg, #ffffff, #f6faff);
